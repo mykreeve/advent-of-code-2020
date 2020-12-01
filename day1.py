@@ -9,11 +9,11 @@ for f in file:
 
 
 for a in range(len(file)):
-    for b in range(len(file)):
+    for b in range(a,len(file)):
         if a == b:
             continue
         if (numbers[a]+numbers[b] == 2020):
-            print ("Answer to part 1:", numbers[a] * numbers[b])
+            print ("Answer to part 1:", numbers[a] * numbers[b], '(', numbers [a], ',', numbers[b], ')')
             break
     else:
         continue
@@ -21,12 +21,14 @@ for a in range(len(file)):
 
 
 for a in range(len(file)):
-    for b in range(len(file)):
-        for c in range(len(file)):
+    for b in range(a,len(file)):
+        if (a == b or (a+b) > 2020):
+            continue
+        for c in range(b,len(file)):
             if (a == b or a == c or b == c):
                 continue
             if (numbers[a]+numbers[b]+numbers[c] == 2020):
-                print ("Answer to part 2:", numbers[a] * numbers[b] * numbers[c])
+                print ("Answer to part 2:", numbers[a] * numbers[b] * numbers[c], '(', numbers [a], ',', numbers[b], ',', numbers[c], ')')
                 break
         else:
             continue
