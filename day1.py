@@ -10,6 +10,8 @@ for f in file:
 
 for a in range(len(file)):
     for b in range(len(file)):
+        if a == b:
+            continue
         if (numbers[a]+numbers[b] == 2020):
             print ("Answer to part 1:", numbers[a] * numbers[b])
             break
@@ -21,6 +23,8 @@ for a in range(len(file)):
 for a in range(len(file)):
     for b in range(len(file)):
         for c in range(len(file)):
+            if (a == b or a == c or b == c):
+                continue
             if (numbers[a]+numbers[b]+numbers[c] == 2020):
                 print ("Answer to part 2:", numbers[a] * numbers[b] * numbers[c])
                 break
