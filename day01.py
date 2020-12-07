@@ -1,6 +1,6 @@
 from datetime import datetime
 
-filename="input/day1input.txt"
+filename="input/day01input.txt"
 file=open(filename,"r")
 file=file.readlines()
 

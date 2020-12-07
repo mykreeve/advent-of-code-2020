@@ -1,7 +1,7 @@
 from datetime import datetime
 import re
 
-filename="input/day4input.txt"
+filename="input/day04input.txt"
 file=open(filename,"r")
 file=file.readlines()
 
