@@ -23,7 +23,7 @@ def printmap(grid):
         for x in range(xpos):
             print(grid[(x,y)], end='')
         print ('\n',end='')
-    test = input('.')
+    # test = input('.')
 
 input_grid = copy.deepcopy(grid)
 
