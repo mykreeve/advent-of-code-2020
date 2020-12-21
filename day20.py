@@ -72,8 +72,12 @@ for t in tile_edges:
 a = 1
 for c in corners:
     a *= int(c)
-print(a)
 
+done = datetime.now()
+print ("Answer to part one:", a)
+print ("Time taken:", done - now)
+
+now = datetime.now()
 tile_names = []
 for t in tiles:
     tile_names.append(t)
@@ -138,34 +142,14 @@ while len(tile_names) > 0:
                         mapped[(empty_neighs[0])] = av_opts[0]
                         tile_names.remove(av_opts[0])
 
-print ("\nThe map looks like this:")
-for y in range(0,12):
-    for x in range(0,12):
-        print(mapped[(x,y)] , end= " ")
-    print ('')
-print ("")
+# print ("\nThe map looks like this:")
+# for y in range(0,12):
+#     for x in range(0,12):
+#         print(mapped[(x,y)] , end= " ")
+#     print ('')
+# print ("")
 
 oriented = {}
-
-def print_diff_line_tile(tile):
-    for t in tile:
-        print ('           '+t)
-    print('\n')
-
-def print_left_tile(tile1, tile2):
-    for n in range(len(tile1)):
-        print(tile1[n]+' '+tile2[n])
-    print('\n')
-
-def print_right_tile(tile1,tile2):
-    for n in range(len(tile1)):
-        print('           '+tile1[n]+' '+tile2[n])
-    print('\n')
-
-def print_side_tiles(tile1,tile2,tile3):
-    for n in range(len(tile1)):
-        print(tile1[n],tile2[n],tile3[n])
-    print('\n')
 
 def get_sides_from_tile(tile):
     sides = []
@@ -237,12 +221,15 @@ while len(oriented) < 144:
                 opts = [get_sides_from_tile(t)]
                 opts.append(get_sides_from_xmirror_tile(t))
                 opts.append(get_sides_from_ymirror_tile(t))
-                if len(oriented) > 89:
-                    opts.append(get_sides_from_tile(rotate(t)))
-                if len(oriented) > 100:
-                    opts.append(get_sides_from_xmirror_tile(rotate(t)))
-                if len(oriented) > 109:
-                    opts.append(get_sides_from_ymirror_tile(rotate(t)))
+                opts.append(get_sides_from_tile(rotate(t)))
+                opts.append(get_sides_from_xmirror_tile(rotate(t)))
+                opts.append(get_sides_from_ymirror_tile(rotate(t)))
+                opts.append(get_sides_from_tile(rotate(rotate(t))))
+                opts.append(get_sides_from_xmirror_tile(rotate(rotate(t))))
+                opts.append(get_sides_from_ymirror_tile(rotate(rotate(t))))
+                opts.append(get_sides_from_tile(rotate(rotate(rotate(t)))))
+                opts.append(get_sides_from_xmirror_tile(rotate(rotate(rotate(t)))))
+                opts.append(get_sides_from_ymirror_tile(rotate(rotate(rotate(t)))))
 
                 fix = 0
                 for n,d in enumerate(directions):
@@ -261,56 +248,98 @@ while len(oriented) < 144:
                                 if xn not in neighbours[n]:
                                     neighbours[n].append(xn)
 
-                if len(oriented) == 115:
-                    for yyy in range(12):
-                        for line in range(10):
-                            for xxxx in range(12):
-                                if (xxxx,yyy) in oriented:
-                                    print (oriented[(xxxx,yyy)][line],end=" ")
-                                else:
-                                    print ("          ", end=" ")
-                            print('')
-                    print(opts)
-                    print(x,y,neighbours)
-                    input('--')
-
                 insert_options = []
                 if fix >= 1 or (x,y) == (0,0):
                     for v,o in enumerate(opts):
-                        for orient in range(4):
-                            match = 0
-                            for n in neighbours:
-                                if o[(orient+n)%4] in neighbours[n]:
-                                    match += 1
-                            if match == len(neighbours):
-                                changed = copy.deepcopy(t)
-                                # print ((x,y), v, orient, "WOOP")
-                                if v == 0:
-                                    print('')
-                                elif v == 1:
-                                    temp2 = []
-                                    for xx in changed:
-                                        temp2.append(xx[::-1])
-                                    changed = temp2
-                                elif v == 2:
-                                    changed = changed[::-1]
-                                if orient > 0:
-                                    for rots in range(orient):
-                                        changed = rotate(changed)
-                                if (x,y) not in oriented:
-                                    if changed not in insert_options:
-                                        insert_options.append(changed)
+                        match = 0
+                        for n in neighbours:
+                            if o[n] in neighbours[n]:
+                                match += 1
+                        if match == len(neighbours):
+                            changed = copy.deepcopy(t)
+                            # print ((x,y), v, orient, "WOOP")
+                            if v == 0:
+                                continue
+                            elif v == 1:
+                                temp2 = []
+                                for xx in changed:
+                                    temp2.append(xx[::-1])
+                                changed = temp2
+                            elif v == 2:
+                                changed = changed[::-1]
+                            elif v == 3:
+                                changed = rotate(changed)
+                            elif v == 4:
+                                changed = rotate(changed)
+                                temp2 = []
+                                for xx in changed:
+                                    temp2.append(xx[::-1])
+                                changed = temp2
+                            elif v == 5:
+                                changed = rotate(changed)[::-1]
+                            elif v == 6:
+                                changed = rotate(rotate(changed))
+                            elif v == 7:
+                                changed = rotate(rotate(changed))
+                                temp2 = []
+                                for xx in changed:
+                                    temp2.append(xx[::-1])
+                                changed = temp2
+                            elif v == 8:
+                                changed = rotate(rotate(changed))[::-1]
+                            elif v == 9:
+                                changed = rotate(rotate(rotate(changed)))
+                            elif v == 10:
+                                changed = rotate(rotate(rotate(changed)))
+                                temp2 = []
+                                for xx in changed:
+                                    temp2.append(xx[::-1])
+                                changed = temp2
+                            elif v == 11:
+                                changed = rotate(rotate(rotate(changed)))[::-1]
+                            if changed not in insert_options:
+                                insert_options.append(changed)
                 if len(insert_options) == 1:
                     oriented[(x,y)] = insert_options[0]
 
-    # for y in range(12):
-    #     for line in range(10):
-    #         for x in range(12):
-    #             if (x,y) in oriented:
-    #                 print (oriented[(x,y)][line],end=" ")
-    #             else:
-    #                 print ("          ", end=" ")
-    #         print('')
+# print('The map looks like this:')
+sea_map = []
+for y in range(12):
+    for line in range(1,9):
+        map_line = []
+        for x in range(12):
+            if (x,y) in oriented:
+                for c in range(1,9):
+                    # print (oriented[(x,y)][line][c],end="")
+                    map_line.append(oriented[(x,y)][line][c])
+        # print('')
+        sea_map.append(map_line)
+# print('\n')
 
-    prompt = str(len(oriented)) +' --'
-    input(prompt)
+sea_monster = ["                  # ","#    ##    ##    ###"," #  #  #  #  #  #   "]
+sea_monster_positions = []
+for x in range(len(sea_monster[0])):
+    for y in range(len(sea_monster)):
+        if sea_monster[y][x] == '#':
+            sea_monster_positions.append((x,y))
+# print (sea_monster_positions)
+
+for x in range(len(sea_map[0])-len(sea_monster[0])):
+    for y in range(len(sea_map)-len(sea_monster)):
+        monster_spots = 0
+        for smp in sea_monster_positions:
+            if sea_map[y+smp[1]][x+smp[0]] == '#':
+                monster_spots += 1
+        if monster_spots == len(sea_monster_positions):
+            for smp in sea_monster_positions:
+                sea_map[y+smp[1]][x+smp[0]] = 'O'
+
+waves = 0
+for x in sea_map:
+    for c in x:
+        if c == '#':
+            waves += 1
+
+done = datetime.now()
+print ("Answer to part two:", waves)
+print ("Time taken:", done - now)
